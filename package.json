@@ -4,7 +4,8 @@
   "description": "Health and liveness checks",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test-watch": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -16,7 +17,9 @@
       "node": true,
       "es6": true
     },
-    "plugins": ["prettier"],
+    "plugins": [
+      "prettier"
+    ],
     "rules": {
       "prettier/prettier": [
         2,
@@ -30,7 +33,10 @@
       "no-unused-vars": 2
     }
   },
-  "keywords": ["kubernetes", "heathcheck"],
+  "keywords": [
+    "kubernetes",
+    "heathcheck"
+  ],
   "author": "hharnisc@gmail.com",
   "license": "MIT",
   "bugs": {
@@ -41,6 +47,13 @@
     "babel-eslint": "^8.2.2",
     "eslint": "^4.18.1",
     "eslint-plugin-prettier": "^2.6.0",
-    "prettier": "^1.11.0"
+    "jest": "^22.4.2",
+    "prettier": "^1.11.0",
+    "request-promise": "4.2.2",
+    "test-listen": "1.1.0"
+  },
+  "dependencies": {
+    "microrouter": "^3.0.0",
+    "micro": "^9.1.0"
   }
 }
