@@ -1,0 +1,46 @@
+{
+  "name": "@bufferapp/ekg",
+  "version": "0.0.1",
+  "description": "Health and liveness checks",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bufferapp/EKG.git"
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "env": {
+      "node": true,
+      "es6": true
+    },
+    "plugins": ["prettier"],
+    "rules": {
+      "prettier/prettier": [
+        2,
+        {
+          "singleQuote": true,
+          "trailingComma": "all",
+          "semi": false,
+          "bracketSpacing": true
+        }
+      ],
+      "no-unused-vars": 2
+    }
+  },
+  "keywords": ["kubernetes", "heathcheck"],
+  "author": "hharnisc@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bufferapp/EKG/issues"
+  },
+  "homepage": "https://github.com/bufferapp/EKG#readme",
+  "devDependencies": {
+    "babel-eslint": "^8.2.2",
+    "eslint": "^4.18.1",
+    "eslint-plugin-prettier": "^2.6.0",
+    "prettier": "^1.11.0"
+  }
+}
