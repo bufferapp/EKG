@@ -158,3 +158,49 @@ test('should handle tcpDialCheck failure', async () => {
 test('should export mongoDBCheck', () => {
   expect(mongoDBCheck).toBeDefined()
 })
+
+test('should perform mongoDBCheck', async () => {
+  const command = jest.fn((_, cb) => cb())
+  const db = {
+    command,
+  }
+  await mongoDBCheck({
+    db,
+  })()
+  expect(command).toHaveBeenCalledWith({ ping: 1 }, jasmine.any(Function))
+})
+
+it('should handle failed mongoDBCheck', async () => {
+  expect.assertions(1)
+  const error = 'some error'
+  const command = jest.fn((_, cb) => cb(new Error(error)))
+  const db = {
+    command,
+  }
+  try {
+    await mongoDBCheck({
+      db,
+    })()
+  } catch (e) {
+    expect(e.message).toBe(error)
+  }
+})
+
+it('should handle timeout mongoDBCheck', async () => {
+  expect.assertions(1)
+  const command = jest.fn(async (_, cb) => {
+    await sleep(100)
+    cb()
+  })
+  const db = {
+    command,
+  }
+  try {
+    await mongoDBCheck({
+      db,
+      timeout: 10,
+    })()
+  } catch (e) {
+    expect(e.message).toBe('Check Timed Out')
+  }
+})

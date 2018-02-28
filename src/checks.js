@@ -4,8 +4,9 @@ const { promisify } = require('util')
 const request = require('request-promise')
 
 promiseDns = promisify(dns.lookup)
+const defaultTimeout = 5000
 
-const timeoutCheck = ({ check, timeout = 5000 }) => async () =>
+const timeoutCheck = ({ check, timeout = defaultTimeout }) => async () =>
   new Promise(async (resolve, reject) => {
     const id = setTimeout(() => {
       reject(new Error('Check Timed Out'))
@@ -32,7 +33,7 @@ const dnsResolveCheck = ({ host, timeout }) =>
     timeout,
   })
 
-const tcpDialCheck = ({ host, port, timeout = 5000 }) => () =>
+const tcpDialCheck = ({ host, port, timeout = defaultTimeout }) => () =>
   new Promise((resolve, reject) => {
     const sock = new net.Socket()
     sock.on('error', e => {
@@ -49,7 +50,20 @@ const tcpDialCheck = ({ host, port, timeout = 5000 }) => () =>
     })
   })
 
-const mongoDBCheck = () => {}
+const mongoDBCheck = ({ db, timeout }) =>
+  timeoutCheck({
+    check: () =>
+      new Promise((resolve, reject) => {
+        db.command({ ping: 1 }, e => {
+          if (e) {
+            reject(e)
+          } else {
+            resolve()
+          }
+        })
+      }),
+    timeout,
+  })
 
 module.exports = {
   timeoutCheck,
