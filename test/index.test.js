@@ -1,7 +1,7 @@
 const micro = require('micro')
 const listen = require('test-listen')
 const request = require('request-promise')
-const EKG = require('../src')
+const { EKG } = require('../src')
 
 test('should export handler', () => {
   expect(new EKG().handler).toBeDefined()

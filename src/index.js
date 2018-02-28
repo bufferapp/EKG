@@ -1,7 +1,14 @@
 const { send } = require('micro')
 const { router, get } = require('microrouter')
+const {
+  timeoutCheck,
+  httpGetCheck,
+  dnsResolveCheck,
+  tcpDialCheck,
+  mongoDBCheck,
+} = require('./checks')
 
-module.exports = function() {
+const EKG = function() {
   let livenessChecks = []
   let readynessChecks = []
 
@@ -61,4 +68,13 @@ module.exports = function() {
     addLivenessCheck,
     addReadynessCheck,
   }
+}
+
+module.exports = {
+  EKG,
+  timeoutCheck,
+  httpGetCheck,
+  dnsResolveCheck,
+  tcpDialCheck,
+  mongoDBCheck,
 }

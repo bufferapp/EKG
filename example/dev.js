@@ -1,6 +1,5 @@
 const micro = require('micro')
-const EKG = require('../src')
-const { httpGetCheck, dnsResolveCheck } = require('../src/checks')
+const { EKG, httpGetCheck, dnsResolveCheck } = require('../src')
 
 const ekg = new EKG()
 
