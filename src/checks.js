@@ -1,4 +1,8 @@
+const dns = require('dns')
+const { promisify } = require('util')
 const request = require('request-promise')
+
+promiseDns = promisify(dns.lookup)
 
 const timeoutCheck = ({ check, timeout = 5000 }) => async () =>
   new Promise(async (resolve, reject) => {
@@ -21,7 +25,14 @@ const httpGetCheck = ({ url, timeout }) =>
     timeout,
   })
 
+const dnsResolveCheck = ({ host, timeout }) =>
+  timeoutCheck({
+    check: () => promiseDns(host),
+    timeout,
+  })
+
 module.exports = {
   timeoutCheck,
   httpGetCheck,
+  dnsResolveCheck,
 }
