@@ -7,6 +7,7 @@ const {
   httpGetCheck,
   dnsResolveCheck,
   tcpDialCheck,
+  mongoDBCheck,
 } = require('../src/checks')
 
 test('should export timeoutCheck', () => {
@@ -152,4 +153,8 @@ test('should handle tcpDialCheck failure', async () => {
       'getaddrinfo ENOTFOUND nonexistent.buffer.com nonexistent.buffer.com:80',
     )
   }
+})
+
+test('should export mongoDBCheck', () => {
+  expect(mongoDBCheck).toBeDefined()
 })

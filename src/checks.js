@@ -49,9 +49,12 @@ const tcpDialCheck = ({ host, port, timeout = 5000 }) => () =>
     })
   })
 
+const mongoDBCheck = () => {}
+
 module.exports = {
   timeoutCheck,
   httpGetCheck,
   dnsResolveCheck,
   tcpDialCheck,
+  mongoDBCheck,
 }
