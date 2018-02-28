@@ -49,12 +49,12 @@
     "eslint-plugin-prettier": "^2.6.0",
     "jest": "^22.4.2",
     "prettier": "^1.11.0",
-    "request-promise": "^4.2.2",
-    "test-listen": "^1.1.0"
+    "test-listen": "^1.1.0",
+    "then-sleep": "^1.0.1"
   },
   "dependencies": {
+    "request-promise": "^4.2.2",
     "micro": "^9.1.0",
-    "microrouter": "^3.0.0",
-    "then-sleep": "^1.0.1"
+    "microrouter": "^3.0.0"
   }
 }

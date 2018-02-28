@@ -1,15 +1,27 @@
-const sleep = require('then-sleep')
+const request = require('request-promise')
 
-const timeoutCheck = async ({ check, timeout = 5000 }) =>
+const timeoutCheck = ({ check, timeout = 5000 }) => async () =>
   new Promise(async (resolve, reject) => {
     const id = setTimeout(() => {
       reject(new Error('Check Timed Out'))
     }, timeout)
-    await check()
+    let result
+    try {
+      result = await check()
+    } catch (e) {
+      reject(e)
+    }
     clearTimeout(id)
-    resolve()
+    resolve(result)
+  })
+
+const httpGetCheck = ({ url, timeout }) =>
+  timeoutCheck({
+    check: () => request(url),
+    timeout,
   })
 
 module.exports = {
   timeoutCheck,
+  httpGetCheck,
 }
