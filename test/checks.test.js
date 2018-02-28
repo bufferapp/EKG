@@ -1,4 +1,5 @@
 const { default: micro, send } = require('micro')
+const { URL } = require('url')
 const sleep = require('then-sleep')
 const listen = require('test-listen')
 const {
@@ -114,4 +115,41 @@ test('should handle timeout dnsResolveCheck', async () => {
 
 test('should export tcpDialCheck', () => {
   expect(tcpDialCheck).toBeDefined()
+})
+
+test('should perform tcpDialCheck', async () => {
+  const service = micro(() => 'OK')
+  const url = await listen(service)
+  const { port } = new URL(url)
+  await tcpDialCheck({
+    host: 'localhost',
+    port,
+  })()
+})
+
+test('should handle tcpDialCheck timeout', async () => {
+  expect.assertions(1)
+  try {
+    await tcpDialCheck({
+      host: 'buffer.com',
+      port: 80,
+      timeout: 1,
+    })()
+  } catch (e) {
+    expect(e.message).toBe('Check Timed Out')
+  }
+})
+
+test('should handle tcpDialCheck failure', async () => {
+  expect.assertions(1)
+  try {
+    await tcpDialCheck({
+      host: 'nonexistent.buffer.com',
+      port: 80,
+    })()
+  } catch (e) {
+    expect(e.message).toBe(
+      'getaddrinfo ENOTFOUND nonexistent.buffer.com nonexistent.buffer.com:80',
+    )
+  }
 })

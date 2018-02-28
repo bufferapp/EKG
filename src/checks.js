@@ -1,4 +1,5 @@
 const dns = require('dns')
+const net = require('net')
 const { promisify } = require('util')
 const request = require('request-promise')
 
@@ -31,7 +32,22 @@ const dnsResolveCheck = ({ host, timeout }) =>
     timeout,
   })
 
-const tcpDialCheck = () => {}
+const tcpDialCheck = ({ host, port, timeout = 5000 }) => () =>
+  new Promise((resolve, reject) => {
+    const sock = new net.Socket()
+    sock.on('error', e => {
+      sock.destroy()
+      reject(e)
+    })
+    sock.setTimeout(timeout, () => {
+      sock.destroy()
+      reject(new Error('Check Timed Out'))
+    })
+    sock.connect(port, host, () => {
+      sock.destroy()
+      resolve()
+    })
+  })
 
 module.exports = {
   timeoutCheck,
