@@ -1,7 +1,12 @@
 const { default: micro, send } = require('micro')
 const sleep = require('then-sleep')
 const listen = require('test-listen')
-const { timeoutCheck, httpGetCheck, dnsResolveCheck } = require('../src/checks')
+const {
+  timeoutCheck,
+  httpGetCheck,
+  dnsResolveCheck,
+  tcpDialCheck,
+} = require('../src/checks')
 
 test('should export timeoutCheck', () => {
   expect(timeoutCheck).toBeDefined()
@@ -105,4 +110,8 @@ test('should handle timeout dnsResolveCheck', async () => {
   } catch (e) {
     expect(e.message).toBe('Check Timed Out')
   }
+})
+
+test('should export tcpDialCheck', () => {
+  expect(tcpDialCheck).toBeDefined()
 })

@@ -31,8 +31,11 @@ const dnsResolveCheck = ({ host, timeout }) =>
     timeout,
   })
 
+const tcpDialCheck = () => {}
+
 module.exports = {
   timeoutCheck,
   httpGetCheck,
   dnsResolveCheck,
+  tcpDialCheck,
 }
