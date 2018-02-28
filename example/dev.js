@@ -1,5 +1,6 @@
 const micro = require('micro')
 const EKG = require('../src')
+const { httpGetCheck, dnsResolveCheck } = require('../src/checks')
 
 const ekg = new EKG()
 
@@ -13,6 +14,14 @@ ekg.addLivenessCheck({
     throw new Error('Liveness Kaboom!')
   },
 })
+ekg.addLivenessCheck({
+  name: 'http google',
+  check: httpGetCheck({ url: 'https://google.com' }),
+})
+ekg.addLivenessCheck({
+  name: 'dns buffer',
+  check: dnsResolveCheck({ host: 'buffer.com' }),
+})
 
 ekg.addReadynessCheck({
   name: 'passing check',
@@ -23,6 +32,14 @@ ekg.addReadynessCheck({
   check: async () => {
     throw new Error('Readyness Kaboom!')
   },
+})
+ekg.addReadynessCheck({
+  name: 'http google',
+  check: httpGetCheck({ url: 'https://google.com' }),
+})
+ekg.addReadynessCheck({
+  name: 'dns buffer',
+  check: dnsResolveCheck({ host: 'buffer.com' }),
 })
 
 const server = micro(ekg.handler)
