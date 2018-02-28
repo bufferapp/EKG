@@ -8,7 +8,7 @@ const {
   dnsResolveCheck,
   tcpDialCheck,
   mongoDBCheck,
-} = require('../src/checks')
+} = require('../src/')
 
 test('should export timeoutCheck', () => {
   expect(timeoutCheck).toBeDefined()

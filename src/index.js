@@ -70,11 +70,11 @@ const EKG = function() {
   }
 }
 
-module.exports = {
-  EKG,
-  timeoutCheck,
-  httpGetCheck,
-  dnsResolveCheck,
-  tcpDialCheck,
-  mongoDBCheck,
-}
+module.exports = EKG
+exports = EKG
+exports.default = EKG
+exports.timeoutCheck = timeoutCheck
+exports.httpGetCheck = httpGetCheck
+exports.dnsResolveCheck = dnsResolveCheck
+exports.tcpDialCheck = tcpDialCheck
+exports.mongoDBCheck = mongoDBCheck
