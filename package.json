@@ -2,8 +2,9 @@
   "name": "@bufferapp/ekg",
   "version": "0.0.1",
   "description": "Health and liveness checks",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
+    "serve": "node src/serve.js",
     "test": "jest",
     "test-watch": "jest --watch"
   },
@@ -53,8 +54,9 @@
     "then-sleep": "^1.0.1"
   },
   "dependencies": {
-    "request-promise": "^4.2.2",
+    "joi": "^13.1.2",
     "micro": "^9.1.0",
-    "microrouter": "^3.0.0"
+    "microrouter": "^3.0.0",
+    "request-promise": "^4.2.2"
   }
 }
