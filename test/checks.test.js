@@ -2,6 +2,7 @@ const { default: micro, send } = require('micro')
 const { URL } = require('url')
 const sleep = require('then-sleep')
 const listen = require('test-listen')
+const MongoDB = require('mongodb')
 const {
   timeoutCheck,
   httpGetCheck,
@@ -160,45 +161,40 @@ test('should export mongoDBCheck', () => {
 })
 
 test('should perform mongoDBCheck', async () => {
-  const command = jest.fn((_, cb) => cb())
-  const db = {
-    command,
-  }
+  const url = 'mongodb://localhost:27017'
+  const dbName = 'default'
   await mongoDBCheck({
-    db,
+    url,
+    dbName,
   })()
-  expect(command).toHaveBeenCalledWith({ ping: 1 }, jasmine.any(Function))
+  expect(MongoDB.MongoClient.connect).toHaveBeenCalledWith(url)
+  expect(MongoDB.db).toHaveBeenCalledWith(dbName)
+  expect(MongoDB.stats).toHaveBeenCalled()
 })
 
 it('should handle failed mongoDBCheck', async () => {
   expect.assertions(1)
-  const error = 'some error'
-  const command = jest.fn((_, cb) => cb(new Error(error)))
-  const db = {
-    command,
-  }
+  const url = 'mongodb://localhost:27017'
+  const dbName = 'fail'
   try {
     await mongoDBCheck({
-      db,
+      url,
+      dbName,
     })()
   } catch (e) {
-    expect(e.message).toBe(error)
+    expect(e.message).toBe('MongoDB Is Not OK')
   }
 })
 
 it('should handle timeout mongoDBCheck', async () => {
   expect.assertions(1)
-  const command = jest.fn(async (_, cb) => {
-    await sleep(100)
-    cb()
-  })
-  const db = {
-    command,
-  }
+  const url = 'mongodb://localhost:27017'
+  const dbName = 'timeout'
   try {
     await mongoDBCheck({
-      db,
-      timeout: 10,
+      url,
+      dbName,
+      timeout: 1,
     })()
   } catch (e) {
     expect(e.message).toBe('Check Timed Out')
