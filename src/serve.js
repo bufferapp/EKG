@@ -1,4 +1,5 @@
 const micro = require('micro')
+const visualize = require('micro-visualize')
 const Joi = require('joi')
 const {
   default: EKG,
@@ -12,19 +13,21 @@ const printHelp = () => {
   console.log(
     `Invalid Configuration, example configuration
 {
-  port: 3000,
-  livenessChecks: [
+  "port": 3000,
+  "livenessChecks": [
     {
-      type: httpGetCheck,
-      url: 'http://localhost',
-      timeout: 5000,
+      "name": "http-check-localhost",
+      "type": "httpGetCheck",
+      "url": "http://localhost",
+      "timeout": 5000
     }
   ],
-  readynessChecks: [
+  "readynessChecks": [
     {
-      type: dnsResolveCheck,
-      host: 'api.bufferapp.com',
-      timeout: 5000,
+      "name": "dns-check-buffer",
+      "type": "dnsResolveCheck",
+      "host": "api.bufferapp.com",
+      "timeout": 5000
     }
   ]
 }
@@ -69,14 +72,35 @@ const tcpDialCheckSchema = Joi.object().keys({
   timeout: timeoutSchema,
 })
 
+const mongoDBCheckSchema = Joi.object().keys({
+  type: Joi.string()
+    .valid('mongoDBCheck')
+    .required(),
+  name: Joi.string().required(),
+  host: Joi.string().required(),
+  port: Joi.number().required(),
+  dbName: Joi.number().required(),
+  timeout: timeoutSchema,
+})
+
 const schema = Joi.object()
   .keys({
     port: Joi.number().required(),
     livenessChecks: Joi.array()
-      .items(httpGetCheckSchema, dnsResolveCheckSchema, tcpDialCheckSchema)
+      .items(
+        httpGetCheckSchema,
+        dnsResolveCheckSchema,
+        tcpDialCheckSchema,
+        mongoDBCheckSchema,
+      )
       .unique(),
     readynessChecks: Joi.array()
-      .items(httpGetCheckSchema, dnsResolveCheckSchema, tcpDialCheckSchema)
+      .items(
+        httpGetCheckSchema,
+        dnsResolveCheckSchema,
+        tcpDialCheckSchema,
+        mongoDBCheckSchema,
+      )
       .unique(),
   })
   .or('livenessChecks', 'readynessChecks')
@@ -97,6 +121,13 @@ const generateCheckFunction = ({ check }) => {
       return tcpDialCheck({
         host: check.host,
         port: check.port,
+        timeout: check.timeout,
+      })
+    case 'mongoDBCheck':
+      return mongoDBCheck({
+        host: check.host,
+        port: check.port,
+        dbName: check.dbName,
         timeout: check.timeout,
       })
     default:
@@ -139,7 +170,7 @@ const main = async () => {
       }),
     )
   }
-  const server = micro(ekg.handler)
+  const server = micro(visualize(ekg.handler))
   server.listen(config.port, () =>
     console.log(`listening on port ${config.port}`),
   )

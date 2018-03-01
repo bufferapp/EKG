@@ -56,7 +56,10 @@
   "dependencies": {
     "joi": "^13.1.2",
     "micro": "^9.1.0",
+    "micro-visualize": "^3.0.1",
     "microrouter": "^3.0.0",
+    "mongodb": "^3.0.3",
+    "request": "^2.83.0",
     "request-promise": "^4.2.2"
   }
 }
