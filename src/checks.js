@@ -2,7 +2,7 @@ const dns = require('dns')
 const net = require('net')
 const { promisify } = require('util')
 const request = require('request-promise')
-const { Db } = require('mongodb')
+const { Db, Server, MongoClient } = require('mongodb')
 
 promiseDns = promisify(dns.lookup)
 const defaultTimeout = 5000
@@ -51,12 +51,14 @@ const tcpDialCheck = ({ host, port, timeout = defaultTimeout }) => () =>
     })
   })
 
-const mongoDBCheck = ({ host, port, dbName, timeout }) =>
+const mongoDBCheck = ({ url, dbName, timeout }) =>
   timeoutCheck({
     check: async () => {
-      const db = new Db(dbName, new Server(host, port))
-      const connection = await db.open()
-      await connection.ping()
+      const connection = await MongoClient.connect(url)
+      const stats = await connection.db(dbName).stats()
+      if (stats.ok === 0) {
+        throw new Error('MongoDB Is Not OK')
+      }
       connection.close()
     },
     timeout,
