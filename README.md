@@ -1,5 +1,7 @@
 # EKG
 
+[![Build Status](https://travis-ci.org/bufferapp/EKG.svg?branch=master)](https://travis-ci.org/bufferapp/EKG)
+
 EKG is a library for implementing Kubernetes [liveness and readiness](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/) probe handlers in a sidecar or in your application.
 
 NOTE: This project was heavily influenced from [Heptio Healthcheck](https://github.com/heptiolabs/healthcheck). However EKG takes it a step further by providing a configurable sidecar. This means that for the most common healthcheck scenarios you don't need to instrument you application with code -- you can write the healthcheck configurations in YAML.
