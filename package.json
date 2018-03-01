@@ -1,6 +1,6 @@
 {
   "name": "@bufferapp/ekg",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Health and liveness checks",
   "main": "src/index.js",
   "scripts": {
@@ -18,9 +18,7 @@
       "node": true,
       "es6": true
     },
-    "plugins": [
-      "prettier"
-    ],
+    "plugins": ["prettier"],
     "rules": {
       "prettier/prettier": [
         2,
@@ -34,10 +32,7 @@
       "no-unused-vars": 2
     }
   },
-  "keywords": [
-    "kubernetes",
-    "heathcheck"
-  ],
+  "keywords": ["kubernetes", "heathcheck"],
   "author": "hharnisc@gmail.com",
   "license": "MIT",
   "bugs": {
@@ -61,5 +56,9 @@
     "mongodb": "2.2.19",
     "request": "^2.83.0",
     "request-promise": "^4.2.2"
+  },
+  "files": ["src/"],
+  "publishConfig": {
+    "access": "public"
   }
 }
