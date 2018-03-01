@@ -22,7 +22,7 @@ const printHelp = () => {
       "timeout": 5000
     }
   ],
-  "readynessChecks": [
+  "readinessChecks": [
     {
       "name": "dns-check-buffer",
       "type": "dnsResolveCheck",
@@ -93,7 +93,7 @@ const schema = Joi.object()
         mongoDBCheckSchema,
       )
       .unique(),
-    readynessChecks: Joi.array()
+    readinessChecks: Joi.array()
       .items(
         httpGetCheckSchema,
         dnsResolveCheckSchema,
@@ -102,7 +102,7 @@ const schema = Joi.object()
       )
       .unique(),
   })
-  .or('livenessChecks', 'readynessChecks')
+  .or('livenessChecks', 'readinessChecks')
 
 const generateCheckFunction = ({ check }) => {
   switch (check.type) {
@@ -160,9 +160,9 @@ const main = async () => {
     )
   }
 
-  if (config.readynessChecks) {
-    config.readynessChecks.forEach(check =>
-      ekg.addReadynessCheck({
+  if (config.readinessChecks) {
+    config.readinessChecks.forEach(check =>
+      ekg.addReadinessCheck({
         check: generateCheckFunction({ check }),
         name: check.name,
       }),

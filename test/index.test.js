@@ -11,8 +11,8 @@ test('should export addLivenessCheck', () => {
   expect(new EKG().addLivenessCheck).toBeDefined()
 })
 
-test('should export addReadynessCheck', () => {
-  expect(new EKG().addReadynessCheck).toBeDefined()
+test('should export addReadinessCheck', () => {
+  expect(new EKG().addReadinessCheck).toBeDefined()
 })
 
 test('should handle /live endpoint', async () => {
@@ -104,7 +104,7 @@ test('should handle /ready endpoint with passing check', async () => {
     name: 'my passing check',
     check: () => 'OK',
   }
-  ekg.addReadynessCheck(check)
+  ekg.addReadinessCheck(check)
   const service = micro(ekg.handler)
 
   const url = await listen(service)
@@ -136,7 +136,7 @@ test('should handle /ready endpoint with failing checks', async () => {
       },
     },
   ]
-  checks.forEach(check => ekg.addReadynessCheck(check))
+  checks.forEach(check => ekg.addReadinessCheck(check))
 
   const service = micro(ekg.handler)
 

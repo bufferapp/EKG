@@ -10,7 +10,7 @@ const {
 
 const EKG = function() {
   let livenessChecks = []
-  let readynessChecks = []
+  let readinessChecks = []
 
   const addLivenessCheck = ({ name, check }) => {
     const newCheck = { name, check }
@@ -20,11 +20,11 @@ const EKG = function() {
     }
   }
 
-  const addReadynessCheck = ({ name, check }) => {
+  const addReadinessCheck = ({ name, check }) => {
     const newCheck = { name, check }
-    readynessChecks = [...readynessChecks, newCheck]
+    readinessChecks = [...readinessChecks, newCheck]
     return () => {
-      readynessChecks = readynessChecks.filter(
+      readinessChecks = readinessChecks.filter(
         curCheck => newCheck !== curCheck,
       )
     }
@@ -60,13 +60,13 @@ const EKG = function() {
   const liveHandler = (req, res) =>
     baseHandler({ checks: livenessChecks })(req, res)
   const readyHandler = (req, res) =>
-    baseHandler({ checks: readynessChecks })(req, res)
+    baseHandler({ checks: readinessChecks })(req, res)
 
   const handler = router(get('/live', liveHandler), get('/ready', readyHandler))
   return {
     handler,
     addLivenessCheck,
-    addReadynessCheck,
+    addReadinessCheck,
   }
 }
 

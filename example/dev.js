@@ -51,37 +51,37 @@ ekg.addLivenessCheck({
   }),
 })
 
-// Readyness
-ekg.addReadynessCheck({
+// Readiness
+ekg.addReadinessCheck({
   name: 'passing check',
   check: async () => 'OK',
 })
-ekg.addReadynessCheck({
+ekg.addReadinessCheck({
   name: 'failing check',
   check: async () => {
-    throw new Error('Readyness Kaboom!')
+    throw new Error('Readiness Kaboom!')
   },
 })
-ekg.addReadynessCheck({
+ekg.addReadinessCheck({
   name: 'http google',
   check: httpGetCheck({ url: 'https://google.com' }),
 })
-ekg.addReadynessCheck({
+ekg.addReadinessCheck({
   name: 'dns buffer',
   check: dnsResolveCheck({ host: 'buffer.com' }),
 })
-ekg.addReadynessCheck({
+ekg.addReadinessCheck({
   name: 'tcp buffer',
   check: tcpDialCheck({ host: 'buffer.com', port: 80 }),
 })
-ekg.addReadynessCheck({
+ekg.addReadinessCheck({
   name: 'mongodb localhost',
   check: mongoDBCheck({
     url: 'mongodb://localhost:27017',
     dbName: 'default',
   }),
 })
-ekg.addReadynessCheck({
+ekg.addReadinessCheck({
   name: 'timeout fail!',
   check: timeoutCheck({
     check: () =>
