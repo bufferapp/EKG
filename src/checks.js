@@ -2,7 +2,7 @@ const dns = require('dns')
 const net = require('net')
 const { promisify } = require('util')
 const request = require('request-promise')
-const { Db, Server, MongoClient } = require('mongodb')
+const { MongoClient } = require('mongodb')
 
 promiseDns = promisify(dns.lookup)
 const defaultTimeout = 5000
