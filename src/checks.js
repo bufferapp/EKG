@@ -1,10 +1,16 @@
 const dns = require('dns')
 const net = require('net')
+const https = require('https')
+const http = require('http')
+const url = require('url')
 const { promisify } = require('util')
-const request = require('request-promise')
-const { MongoClient } = require('mongodb')
+const { Server } = require('mongodb-core')
 
 promiseDns = promisify(dns.lookup)
+const adapters = {
+  'http:': http,
+  'https:': https,
+}
 const defaultTimeout = 5000
 
 const timeoutCheck = ({ check, timeout = defaultTimeout }) => async () =>
@@ -22,9 +28,25 @@ const timeoutCheck = ({ check, timeout = defaultTimeout }) => async () =>
     resolve(result)
   })
 
-const httpGetCheck = ({ url, timeout }) =>
+const httpGetCheck = ({ url: inputUrl, timeout }) =>
   timeoutCheck({
-    check: () => request(url),
+    check: () =>
+      new Promise((resolve, reject) => {
+        const { protocol } = url.parse(inputUrl)
+        adapters[protocol]
+          .request(new url.URL(inputUrl), res => {
+            if (res.statusCode !== 200) {
+              const error = new Error(`Status Code ${res.statusCode}`)
+              error.statusCode = res.statusCode
+              reject(error)
+            }
+            resolve()
+          })
+          .on('error', e => {
+            reject(e)
+          })
+          .end()
+      }),
     timeout,
   })
 
@@ -51,16 +73,31 @@ const tcpDialCheck = ({ host, port, timeout = defaultTimeout }) => () =>
     })
   })
 
-const mongoDBCheck = ({ url, dbName, timeout }) =>
+const mongoDBCheck = ({ host, port, timeout }) =>
   timeoutCheck({
-    check: async () => {
-      const connection = await MongoClient.connect(url)
-      const stats = await connection.db(dbName).stats()
-      if (stats.ok === 0) {
-        throw new Error('MongoDB Is Not OK')
-      }
-      connection.close()
-    },
+    check: () =>
+      new Promise((resolve, reject) => {
+        let server = new Server({
+          host,
+          port,
+        })
+        server.on('error', e => reject(e))
+        server.on('connect', connection => {
+          connection.command('system.$cmd', { ping: 1 }, (e, result) => {
+            connection.destroy()
+            if (e) {
+              reject(e)
+            } else {
+              if (result.result.ok === 1) {
+                resolve()
+              } else {
+                reject(new Error('MongoDB Is Not OK'))
+              }
+            }
+          })
+        })
+        server.connect()
+      }),
     timeout,
   })
 

@@ -51,8 +51,8 @@ spec:
                 {
                   "name": "mongodb-check-buffer",
                   "type": "mongoDBCheck",
-                  "url": "mongodb://mongo:27017",
-                  "dbName": "buffer"
+                  "host": "mongo",
+                  "port": 27017
                 }
               ]
             }
@@ -101,8 +101,8 @@ EKG sidecar is passed it's configuration as JSON through the EKG_CONFIG environm
     {
       "name": "mongodb-check-buffer",
       "type": "mongoDBCheck",
-      "url": "mongodb://mongo:27017",
-      "dbName": "buffer",
+      "host": "mongo",
+      "port": 27017,
       "timeout": 5000
     }
   ],
@@ -129,8 +129,8 @@ EKG sidecar is passed it's configuration as JSON through the EKG_CONFIG environm
     {
       "name": "mongodb-check-buffer",
       "type": "mongoDBCheck",
-      "url": "mongodb://mongo:27017",
-      "dbName": "buffer",
+      "host": "mongo",
+      "port": 27017,
       "timeout": 5000
     }
   ]
@@ -203,8 +203,8 @@ Ping a mongodb database
 {
   "name": "mongodb-check-buffer",
   "type": "mongoDBCheck",
-  "url": "mongodb://mongo:27017",
-  "dbName": "buffer",
+  "host": "mongo",
+  "port": 27017,
   "timeout": 5000
 }
 ```
@@ -382,8 +382,8 @@ Returns a function that pings a mongodb database
 
 ```js
 const doCheck = mongoDBCheck({
-  url: 'mongodb://mongo:27017',
-  dbName: 'default',
+  host: 'mongo',
+  port: 27017,
   timeout: 5000,
 })
 

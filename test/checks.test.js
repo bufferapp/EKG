@@ -2,7 +2,7 @@ const { default: micro, send } = require('micro')
 const { URL } = require('url')
 const sleep = require('then-sleep')
 const listen = require('test-listen')
-const MongoDB = require('mongodb')
+const MongoDBCore = require('mongodb-core')
 const {
   timeoutCheck,
   httpGetCheck,
@@ -80,6 +80,10 @@ test('should handle httpGetCheck failure', async () => {
   service.close()
 })
 
+test('should do an httpGetCheck on HTTPS', async () => {
+  await httpGetCheck({ url: 'https://buffer.com' })()
+})
+
 test('should export dnsResolveCheck', () => {
   expect(dnsResolveCheck).toBeDefined()
 })
@@ -127,6 +131,7 @@ test('should perform tcpDialCheck', async () => {
     host: 'localhost',
     port,
   })()
+  service.close()
 })
 
 test('should handle tcpDialCheck timeout', async () => {
@@ -161,42 +166,14 @@ test('should export mongoDBCheck', () => {
 })
 
 test('should perform mongoDBCheck', async () => {
-  const url = 'mongodb://localhost:27017'
-  const dbName = 'default'
+  const host = 'localhost'
+  const port = 27017
   await mongoDBCheck({
-    url,
-    dbName,
+    host,
+    port,
   })()
-  expect(MongoDB.MongoClient.connect).toHaveBeenCalledWith(url)
-  expect(MongoDB.db).toHaveBeenCalledWith(dbName)
-  expect(MongoDB.stats).toHaveBeenCalled()
-})
-
-it('should handle failed mongoDBCheck', async () => {
-  expect.assertions(1)
-  const url = 'mongodb://localhost:27017'
-  const dbName = 'fail'
-  try {
-    await mongoDBCheck({
-      url,
-      dbName,
-    })()
-  } catch (e) {
-    expect(e.message).toBe('MongoDB Is Not OK')
-  }
-})
-
-it('should handle timeout mongoDBCheck', async () => {
-  expect.assertions(1)
-  const url = 'mongodb://localhost:27017'
-  const dbName = 'timeout'
-  try {
-    await mongoDBCheck({
-      url,
-      dbName,
-      timeout: 1,
-    })()
-  } catch (e) {
-    expect(e.message).toBe('Check Timed Out')
-  }
+  expect(MongoDBCore.Server).toHaveBeenCalledWith({
+    host,
+    port,
+  })
 })

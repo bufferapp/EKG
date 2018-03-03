@@ -4,6 +4,8 @@
   "description": "Health and liveness checks",
   "main": "src/index.js",
   "scripts": {
+    "build": "webpack --config webpack.config.js --progress --profile --colors",
+    "build-stats": "webpack --env production --json > stats.json",
     "serve": "node src/serve.js",
     "test": "jest",
     "test-watch": "jest --watch"
@@ -45,17 +47,19 @@
     "eslint-plugin-prettier": "^2.6.0",
     "jest": "^22.4.2",
     "prettier": "^1.11.0",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
     "test-listen": "^1.1.0",
-    "then-sleep": "^1.0.1"
+    "then-sleep": "^1.0.1",
+    "webpack": "^4.0.1",
+    "webpack-cli": "^2.0.10"
   },
   "dependencies": {
     "joi": "^13.1.2",
     "micro": "^9.1.0",
     "micro-visualize": "^3.0.1",
     "microrouter": "^3.0.0",
-    "mongodb": "2.2.19",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.2"
+    "mongodb-core": "^2.1.19"
   },
   "files": ["src/"],
   "publishConfig": {

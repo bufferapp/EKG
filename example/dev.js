@@ -36,8 +36,8 @@ ekg.addLivenessCheck({
 ekg.addLivenessCheck({
   name: 'mongodb localhost',
   check: mongoDBCheck({
-    url: 'mongodb://localhost:27017',
-    dbName: 'default',
+    host: 'localhost',
+    port: '27017',
   }),
 })
 ekg.addLivenessCheck({
@@ -77,8 +77,8 @@ ekg.addReadinessCheck({
 ekg.addReadinessCheck({
   name: 'mongodb localhost',
   check: mongoDBCheck({
-    url: 'mongodb://localhost:27017',
-    dbName: 'default',
+    host: 'localhost',
+    port: '27017',
   }),
 })
 ekg.addReadinessCheck({

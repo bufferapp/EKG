@@ -77,8 +77,8 @@ const mongoDBCheckSchema = Joi.object().keys({
     .valid('mongoDBCheck')
     .required(),
   name: Joi.string().required(),
-  url: Joi.string().required(),
-  dbName: Joi.string().required(),
+  host: Joi.string().required(),
+  port: Joi.number().required(),
   timeout: timeoutSchema,
 })
 
@@ -124,8 +124,8 @@ const generateCheckFunction = ({ check }) => {
       })
     case 'mongoDBCheck':
       return mongoDBCheck({
-        url: check.url,
-        dbName: check.dbName,
+        host: check.host,
+        port: check.port,
         timeout: check.timeout,
       })
     default:
