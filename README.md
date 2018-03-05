@@ -209,6 +209,84 @@ Ping a mongodb database
 }
 ```
 
+### Secrets
+
+You might want configure a healthcheck on a public repository with a URL that could be considered sensitive. EKG can plug environment variables into the EKG_CONFIG environment for this type of information:
+
+```
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-application
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: my-application
+    spec:
+      containers:
+      - name: my-application
+        image: my-org/my-application
+        ports:
+        - containerPort: 3000
+      # add the sidecar
+      - name: healthcheck
+        image: bufferapp/ekg:0.1.1
+        env:
+        # my super secret MongoDB host
+        - name: MONGO_HOST
+          valueFrom:
+            secretKeyRef:
+              key: mongo-host
+              name: my-application-secrets
+        # my super secret MongoDB port
+        - name: MONGO_PORT
+          valueFrom:
+            secretKeyRef:
+              key: mongo-port
+              name: my-application-secrets
+        - name: EKG_CONFIG
+          value: >
+            {
+              "port": 8086,
+              "livenessChecks": [
+                {
+                  "name": "httpget-check-service",
+                  "type": "httpGetCheck",
+                  "url": "http://localhost:3000"
+                }
+              ],
+              "readinessChecks": [
+                {
+                  "name": "dns-check-upstream",
+                  "type": "dnsResolveCheck",
+                  "host": "upstream.example.com"
+                },
+                {
+                  "name": "mongodb-check-buffer",
+                  "type": "mongoDBCheck",
+                  # Plug in mongo secrets
+                  "host": "${MONGO_HOST}",
+                  "port": ${MONGO_PORT}
+                }
+              ]
+            }
+         # define a liveness probe that checks every 5 seconds, starting after 5 seconds
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: 8086
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        # define a readiness probe that checks every 5 seconds
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8086
+          periodSeconds: 5
+```
+
 ## Quickstart - Manual
 
 If you don't want to use a sidecar or have some custom liveness checks you'd like to perform, this is the better option. The easiest way to get going is to add some checks and listen on a port the main application is not using.

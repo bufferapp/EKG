@@ -1,6 +1,7 @@
 const micro = require('micro')
 const visualize = require('micro-visualize')
 const Joi = require('joi')
+const templatize = require('./templatize')
 const {
   default: EKG,
   httpGetCheck,
@@ -135,18 +136,38 @@ const generateCheckFunction = ({ check }) => {
 }
 
 const main = async () => {
+  if (!process.env.EKG_CONFIG) {
+    console.error('EKG_CONFIG environment variable missing')
+    process.exit(1)
+  }
+
   let config
   try {
-    config = JSON.parse(process.env.EKG_CONFIG)
-  } catch (err) {
-    console.error('EKG_CONFIG environment variable missing')
+    let envVars = Object.assign({}, process.env, {
+      EKG_CONFIG: '<EKG_CONFIG_CIRCULAR_REF>',
+    })
+    config = templatize({
+      template: process.env.EKG_CONFIG,
+      variables: envVars,
+    })
+  } catch (e) {
+    console.error('Could not insert environment variables into EKG_CONFIG')
+    console.error(e.stack)
+    process.exit(1)
+  }
+
+  try {
+    config = JSON.parse(config)
+  } catch (e) {
+    console.error('Could not parse EKG_CONFIG')
+    console.error(e.stack)
     process.exit(1)
   }
 
   try {
     await Joi.validate(config, schema, { abortEarly: false })
-  } catch (error) {
-    console.error(JSON.stringify(error.details, null, 2))
+  } catch (e) {
+    console.error(JSON.stringify(e.details, null, 2))
     bail()
   }
 
@@ -174,4 +195,6 @@ const main = async () => {
   )
 }
 
-main()
+main().catch(e => {
+  console.log(e.stack)
+})
