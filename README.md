@@ -213,7 +213,7 @@ Ping a mongodb database
 
 You might want configure a healthcheck on a public repository with a URL that could be considered sensitive. EKG can plug environment variables into the EKG_CONFIG environment for this type of information:
 
-```
+```yaml
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
