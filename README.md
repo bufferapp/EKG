@@ -29,7 +29,7 @@ spec:
         - containerPort: 3000
       # add the sidecar
       - name: healthcheck
-        image: bufferapp/ekg:0.1.1
+        image: bufferapp/ekg:latest
         env:
         - name: EKG_CONFIG
           value: >
@@ -232,7 +232,7 @@ spec:
         - containerPort: 3000
       # add the sidecar
       - name: healthcheck
-        image: bufferapp/ekg:0.1.1
+        image: bufferapp/ekg:latest
         env:
         # my super secret MongoDB host
         - name: MONGO_HOST
