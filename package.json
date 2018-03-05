@@ -1,6 +1,6 @@
 {
   "name": "@bufferapp/ekg",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Health and liveness checks",
   "main": "src/index.js",
   "scripts": {
