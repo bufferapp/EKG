@@ -29,7 +29,7 @@ spec:
         - containerPort: 3000
       # add the sidecar
       - name: healthcheck
-        image: bufferapp/ekg:0.1.0
+        image: bufferapp/ekg:0.1.1
         env:
         - name: EKG_CONFIG
           value: >
